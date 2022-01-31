@@ -2,20 +2,20 @@ const urlAPIDistante = "https://tumbler/StuartGame/api/",
     LIST_METHOD = ["GET", "POST"],
     DEFAULT_REPONSE = "Erreur lors de l'appel de l'API";
 var xhrPool = [];
-; (function () {
-    window.onbeforeunload = function () {
+(function() {
+    window.onbeforeunload = function() {
         abortAllRequest();
-    }
+    };
 
     /**
      * Annule l'ensemble des requetes HTTP en cours
      */
-    window.abortAllRequest = function () {
+    window.abortAllRequest = function() {
         xhrPool.forEach(element => {
             element.abort();
         });
         xhrPool.length = 0;
-    }
+    };
 
     window.modules = {
         /**
@@ -30,23 +30,37 @@ var xhrPool = [];
          * @param {function} callbackAlways Fonction de retour en cas d'appel API
          * @param {boolean} sync true, l'appel API est asynchrone.
          */
-        callAPI: function (method, url, data = null, token = null, callbackSuccess = null, callbackFail = null, callbackError = null, callbackAlways = null, sync = true) {
+        callAPI: function(method, url, data = null, token = null, callbackSuccess = null, callbackFail = null, callbackError = null, callbackAlways = null, sync = true) {
             if (LIST_METHOD.includes(method)) {
                 let xhttp = new XMLHttpRequest();
                 xhrPool.push(xhttp);
-                xhttp.onreadystatechange = function () {
+                xhttp.onreadystatechange = function() {
                     if (this.readyState == 4) {
                         if (this.status == 200) {
                             var response = JSON.parse(this.responseText);
                             if (response.error == "no") {
-                                callbackSuccess ? callbackSuccess(response) : displayAlert("main", "success", "Appel Réussi");
+                                if (callbackSuccess) {
+                                    callbackSuccess(response);
+                                } else {
+                                    displayAlert("main", "success", "Appel Réussi");
+                                }
                             } else {
-                                callbackFail ? callbackFail(response) : displayAlert("main", "warning", response.error);
+                                if (callbackFail) {
+                                    callbackFail(response);
+                                } else {
+                                    displayAlert("main", "warning", response.error);
+                                }
                             }
                         } else {
-                            callbackError ? callbackError() : displayAlert("main", "danger", "Erreur lors de l'appel de l'API");
+                            if (callbackError) {
+                                callbackError();
+                            } else {
+                                displayAlert("main", "danger", "Erreur lors de l'appel de l'API");
+                            }
                         }
-                        callbackAlways ? callbackAlways() : null;
+                        if (callbackAlways) {
+                            callbackAlways();
+                        }
                     }
                 };
                 xhttp.open(method, url + (data != null && method == "GET" ? "?" + (data instanceof FormData ? new URLSearchParams(data).toString() : transformRequest(data)) : ""), sync);
@@ -72,12 +86,12 @@ var xhrPool = [];
             }
         },
         /**
-        * Fonction d'affichage des alerts
-        * @param {string} selector Nom de l'environement ou afficher l'alert
-        * @param {string} type "warning" ou "danger"
-        * @param {string} message Message afficher dans l'alert
-        */
-        displayAlert: function (selector, type, message) {
+         * Fonction d'affichage des alerts
+         * @param {string} selector Nom de l'environement ou afficher l'alert
+         * @param {string} type "warning" ou "danger"
+         * @param {string} message Message afficher dans l'alert
+         */
+        displayAlert: function(selector, type, message) {
             const typeAlert = {
                 "info": {
                     className: "alert-info",
@@ -108,12 +122,12 @@ var xhrPool = [];
         },
         cookie: {
             /**
-            * Créer un cookie
-            * @param {string} cname Nom du cookie
-            * @param {string} cvalue Valeur du cookie
-            * @param {int} exdays Nombre de jours de vie du cookie
-            */
-            set: function (cname, cvalue, exdays) {
+             * Créer un cookie
+             * @param {string} cname Nom du cookie
+             * @param {string} cvalue Valeur du cookie
+             * @param {int} exdays Nombre de jours de vie du cookie
+             */
+            set: function(cname, cvalue, exdays) {
                 let date = new Date();
                 date.setTime(date.getTime() + (exdays * 24 * 60 * 60 * 1000));
                 let expires = "expires=" + date.toUTCString();
@@ -126,7 +140,7 @@ var xhrPool = [];
              * @param {string} cname Nom du cookie à chercher
              * @returns {string} Valeur du cookie si trouvé
              */
-            get: function (cname) {
+            get: function(cname) {
                 let name = cname + "=",
                     ca = document.cookie.split(';');
                 for (let i = 0; i < ca.length; i++) {
@@ -145,7 +159,7 @@ var xhrPool = [];
              * Supprime un cookie existant en fonction de son nom
              * @param {string} name Nom du cookie à supprimer
              */
-            delete: function (name) {
+            delete: function(name) {
                 if (getCookie(name)) {
                     document.cookie = name + "=" + ";path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT";
                 }
@@ -160,7 +174,7 @@ var xhrPool = [];
              * @param {string} input Terme rechercher
              * @param {string} typeSearch Type de recherche
              */
-            table: function (idTable, index, input = "", typeSearch = "LIKE") {
+            table: function(idTable, index, input = "", typeSearch = "LIKE") {
                 if (typeof idTable == "string") {
                     let table = document.getElementById(idTable),
                         rows = table.querySelector("tbody").rows;
@@ -197,7 +211,7 @@ var xhrPool = [];
              * @param {string} typeSearch Type de recherche
              * @returns {array}
              */
-            array: function (array, index, input = "", typeSearch = "LIKE") {
+            array: function(array, index, input = "", typeSearch = "LIKE") {
                 let foundArray = [];
                 if (typeof array == "object" && array.length > 0) {
                     array.forEach(element => {
@@ -227,8 +241,9 @@ var xhrPool = [];
              * @param {int} column Numéro de la colonne à trié
              * @param {string} table Id du tableau à trié
              */
-            table: function (column, table) {
-                let rows, switching, i, shouldSwitch, dir, switchcount = 0, current, next;
+            table: function(column, table) {
+                let rows, switching, i, shouldSwitch, dir, switchcount = 0,
+                    current, next;
                 table = document.getElementById(table);
                 switching = true;
                 dir = "asc";
@@ -268,14 +283,14 @@ var xhrPool = [];
                 }
             }
         },
-        loadBtn: function (selector, text, tiny, type, size = null) {
+        loadBtn: function(selector, text, tiny, type, size = null) {
             if (selector === null) {
                 throw "Erreur Selector";
             }
             type = ["grow", "border"].includes(type) ? type : "border";
             size = size != null ? ["sm", "lg"].includes(size) ? size : "sm" : null;
-            selector.innerHTML = selector.disabled ? text == null ? "OK" : text : '<span class="spinner-' + type + (size != null ? ' spinner-' + type + '-' + size + '' : '') + '" role="status" aria-hidden="true"></span>' + (!tiny === true ? ' ' + (text == null ? "Chargement..." : text) : '');
+            selector.innerHTML = selector.disabled ? text == null ? "OK" : text : '<span class="spinner-' + type + (size != null ? ' spinner-' + type + '-' + size + '' : '') + '" role="status" aria-hidden="true"></span>' + (tiny !== true ? ' ' + (text == null ? "Chargement..." : text) : '');
             selector.disabled = !selector.disabled;
         },
-    }
+    };
 })();
