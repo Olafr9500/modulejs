@@ -114,7 +114,7 @@ var xhrPool = [];
                 throw "Element absence de la page";
             } else {
                 document.querySelectorAll(selector + " div.alert").forEach(element => { element.remove(); });
-                let alert = this.docCrea("div");
+                let alert = document.createElement("div");
                 alert.classList.add("alert", "alert-dismissible", "fade", "show", typeAlert[type].className);
                 alert.innerHTML = '<i class="bi ' + typeAlert[type].icon + '"></i> ' + message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
                 document.querySelector(selector).prepend(alert);
