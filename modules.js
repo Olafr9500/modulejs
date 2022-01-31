@@ -1,6 +1,6 @@
 const urlAPIDistante = "https://tumbler/StuartGame/api/",
     LIST_METHOD = ["GET", "POST"],
-    DEFAULT_REPONSE = "Erreur lors de l'appel de l'API";
+    DEFAULT_RESPONSE = "Erreur lors de l'appel de l'API";
 var xhrPool = [];
 (function() {
     window.onbeforeunload = function() {
@@ -8,7 +8,7 @@ var xhrPool = [];
     };
 
     /**
-     * Annule l'ensemble des requetes HTTP en cours
+     * Annule l'ensemble des requêtes HTTP en cours
      */
     window.abortAllRequest = function() {
         xhrPool.forEach(element => {
@@ -32,9 +32,9 @@ var xhrPool = [];
          */
         callAPI: function(method, url, data = null, token = null, callbackSuccess = null, callbackFail = null, callbackError = null, callbackAlways = null, sync = true) {
             if (LIST_METHOD.includes(method)) {
-                let xhttp = new XMLHttpRequest();
-                xhrPool.push(xhttp);
-                xhttp.onreadystatechange = function() {
+                let xhr = new XMLHttpRequest();
+                xhrPool.push(xhr);
+                xhr.onreadystatechange = function() {
                     if (this.readyState == 4) {
                         if (this.status == 200) {
                             var response = JSON.parse(this.responseText);
@@ -63,14 +63,14 @@ var xhrPool = [];
                         }
                     }
                 };
-                xhttp.open(method, url + (data != null && method == "GET" ? "?" + (data instanceof FormData ? new URLSearchParams(data).toString() : transformRequest(data)) : ""), sync);
+                xhr.open(method, url + (data != null && method == "GET" ? "?" + (data instanceof FormData ? new URLSearchParams(data).toString() : transformRequest(data)) : ""), sync);
                 if (token != null) {
-                    xhttp.setRequestHeader('Authorization', 'Bearer ' + token);
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + token);
                 }
-                xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                xhttp.send((data != null && method == "POST" ? (data instanceof FormData ? new URLSearchParams(data).toString() : transformRequest(data)) : ""));
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.send((data != null && method == "POST" ? (data instanceof FormData ? new URLSearchParams(data).toString() : transformRequest(data)) : ""));
             } else {
-                throw "Methode inconnue. Methode authorisé : " + LIST_METHOD.toString();
+                throw "Méthode inconnue. Méthode autorisé : " + LIST_METHOD.toString();
             }
             /**
              * Transforme les informations pour qu'elles soient compatible avec une requête API
@@ -87,7 +87,7 @@ var xhrPool = [];
         },
         /**
          * Fonction d'affichage des alerts
-         * @param {string} selector Nom de l'environement ou afficher l'alert
+         * @param {string} selector Nom de l'environnement ou afficher l'alert
          * @param {string} type "warning" ou "danger"
          * @param {string} message Message afficher dans l'alert
          */
@@ -123,25 +123,25 @@ var xhrPool = [];
         cookie: {
             /**
              * Créer un cookie
-             * @param {string} cname Nom du cookie
-             * @param {string} cvalue Valeur du cookie
-             * @param {int} exdays Nombre de jours de vie du cookie
+             * @param {string} name Nom du cookie
+             * @param {string} value Valeur du cookie
+             * @param {int} expirationDays Nombre de jours de vie du cookie
              */
-            set: function(cname, cvalue, exdays) {
+            set: function(name, value, expirationDays) {
                 let date = new Date();
-                date.setTime(date.getTime() + (exdays * 24 * 60 * 60 * 1000));
+                date.setTime(date.getTime() + (expirationDays * 24 * 60 * 60 * 1000));
                 let expires = "expires=" + date.toUTCString();
-                document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+                document.cookie = name + "=" + value + ";" + expires + ";path=/";
                 console.log("cookie set");
             },
 
             /**
              * Cherche un cookie existant en fonction de son nom
-             * @param {string} cname Nom du cookie à chercher
+             * @param {string} input Nom du cookie à chercher
              * @returns {string} Valeur du cookie si trouvé
              */
-            get: function(cname) {
-                let name = cname + "=",
+            get: function(input) {
+                let name = input + "=",
                     ca = document.cookie.split(';');
                 for (let i = 0; i < ca.length; i++) {
                     let c = ca[i];
@@ -160,7 +160,7 @@ var xhrPool = [];
              * @param {string} name Nom du cookie à supprimer
              */
             delete: function(name) {
-                if (getCookie(name)) {
+                if (this.get(name)) {
                     document.cookie = name + "=" + ";path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT";
                 }
             }
@@ -170,7 +170,7 @@ var xhrPool = [];
             /**
              * Recherche un terme dans une cologne d'un tableau
              * @param {string} idTable Nom du tableau dans lequel chercher
-             * @param {int} index Numéro de la cologne dans laquel chercher
+             * @param {int} index Numéro de la cologne dans laquelle chercher
              * @param {string} input Terme rechercher
              * @param {string} typeSearch Type de recherche
              */
@@ -242,7 +242,7 @@ var xhrPool = [];
              * @param {string} table Id du tableau à trié
              */
             table: function(column, table) {
-                let rows, switching, i, shouldSwitch, dir, switchcount = 0,
+                let rows, switching, i, shouldSwitch, dir, switchCount = 0,
                     current, next;
                 table = document.getElementById(table);
                 switching = true;
@@ -272,9 +272,9 @@ var xhrPool = [];
                         if (shouldSwitch) {
                             rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
                             switching = true;
-                            switchcount++;
+                            switchCount++;
                         } else {
-                            if (switchcount == 0 && dir == "asc") {
+                            if (switchCount == 0 && dir == "asc") {
                                 dir = "desc";
                                 switching = true;
                             }
