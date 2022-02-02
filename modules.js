@@ -17,7 +17,7 @@ var xhrPool = [];
         xhrPool.length = 0;
     };
 
-    window.modules = {
+    window.modulesJs = {
         /**
          * Appel l'API pour réaliser une action dans la base de données
          * @param {string} method HTTP request method : GET/POST
@@ -42,20 +42,20 @@ var xhrPool = [];
                                 if (callbackSuccess) {
                                     callbackSuccess(response);
                                 } else {
-                                    modules.displayAlert("main", "success", "Appel Réussi");
+                                    modulesJs.displayAlert("main", "success", "Appel Réussi");
                                 }
                             } else {
                                 if (callbackFail) {
                                     callbackFail(response);
                                 } else {
-                                    modules.displayAlert("main", "warning", response.error);
+                                    modulesJs.displayAlert("main", "warning", response.error);
                                 }
                             }
                         } else {
                             if (callbackError) {
                                 callbackError();
                             } else {
-                                modules.displayAlert("main", "danger", "Erreur lors de l'appel de l'API");
+                                modulesJs.displayAlert("main", "danger", "Erreur lors de l'appel de l'API");
                             }
                         }
                         if (callbackAlways) {
