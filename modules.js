@@ -42,20 +42,20 @@ var xhrPool = [];
                                 if (callbackSuccess) {
                                     callbackSuccess(response);
                                 } else {
-                                    displayAlert("main", "success", "Appel Réussi");
+                                    modules.displayAlert("main", "success", "Appel Réussi");
                                 }
                             } else {
                                 if (callbackFail) {
                                     callbackFail(response);
                                 } else {
-                                    displayAlert("main", "warning", response.error);
+                                    modules.displayAlert("main", "warning", response.error);
                                 }
                             }
                         } else {
                             if (callbackError) {
                                 callbackError();
                             } else {
-                                displayAlert("main", "danger", "Erreur lors de l'appel de l'API");
+                                modules.displayAlert("main", "danger", "Erreur lors de l'appel de l'API");
                             }
                         }
                         if (callbackAlways) {
