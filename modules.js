@@ -1,6 +1,5 @@
-const urlAPIDistante = "https://tumbler/StuartGame/api/",
-    LIST_METHOD = ["GET", "POST"],
-    DEFAULT_RESPONSE = "Erreur lors de l'appel de l'API";
+const DEFAULT_RESPONSE = "Erreur lors de l'appel de l'API",
+    LIST_METHOD = ["GET", "POST"];
 var xhrPool = [];
 (function() {
     window.onbeforeunload = function() {
