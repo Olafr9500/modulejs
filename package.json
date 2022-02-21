@@ -4,7 +4,8 @@
     "description": "Boite à outils JS",
     "main": "modules.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "eslint": "eslint modules.js"
     },
     "repository": {
         "type": "git",
@@ -18,5 +19,8 @@
     "bugs": {
         "url": "https://github.com/Olafr9500/modulejs/issues"
     },
-    "homepage": "https://github.com/Olafr9500/modulejs#readme"
+    "homepage": "https://github.com/Olafr9500/modulejs#readme",
+    "devDependencies": {
+        "eslint": "^8.9.0"
+    }
 }
