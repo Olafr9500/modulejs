@@ -1,22 +1,22 @@
 {
-  "name": "modulejs",
-  "version": "1.0.0",
-  "description": "Boite a outils js",
-  "main": "modules.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Olafr9500/modulejs.git"
-  },
-  "keywords": [
-    "JS"
-  ],
-  "author": "Olafr",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Olafr9500/modulejs/issues"
-  },
-  "homepage": "https://github.com/Olafr9500/modulejs#readme"
+    "name": "olafr-modulejs",
+    "version": "1.0.0",
+    "description": "Boite à outils JS",
+    "main": "modules.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Olafr9500/modulejs.git"
+    },
+    "keywords": [
+        "JS"
+    ],
+    "author": "Olafr",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Olafr9500/modulejs/issues"
+    },
+    "homepage": "https://github.com/Olafr9500/modulejs#readme"
 }
