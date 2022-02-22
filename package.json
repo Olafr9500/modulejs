@@ -2,7 +2,7 @@
     "name": "olafr-modulejs",
     "version": "1.0.0",
     "description": "Boite à outils JS",
-    "main": "modules.js",
+    "main": "index.js",
     "scripts": {
         "test": "npm-run-all minify eslint",
         "minify": "minify index.js > index.min.js",
