@@ -4,8 +4,9 @@
     "description": "Boite à outils JS",
     "main": "modules.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "eslint": "eslint modules.js"
+        "test": "npm-run-all minify eslint",
+        "minify": "minify index.js > index.min.js",
+        "eslint": "eslint index.js --fix && eslint index.min.js --fix"
     },
     "repository": {
         "type": "git",
