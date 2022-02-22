@@ -2,11 +2,13 @@
     "name": "olafr-modulejs",
     "version": "1.0.0",
     "description": "Boite à outils JS",
+    "type": "module",
     "main": "index.js",
     "scripts": {
-        "test": "npm-run-all minify eslint",
+        "test": "npm-run-all minify eslint nodeTest",
         "minify": "minify index.js > index.min.js",
-        "eslint": "eslint index.js --fix && eslint index.min.js --fix"
+        "eslint": "eslint index.js --fix && eslint index.min.js --fix",
+        "nodeTest": "node index.js & node index.min.js"
     },
     "repository": {
         "type": "git",
@@ -22,6 +24,8 @@
     },
     "homepage": "https://github.com/Olafr9500/modulejs#readme",
     "devDependencies": {
-        "eslint": "^8.9.0"
+        "eslint": "^8.9.0",
+        "mocha": "^9.2.1",
+        "request": "^2.88.2"
     }
 }
