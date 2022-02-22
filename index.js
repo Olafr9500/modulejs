@@ -134,6 +134,9 @@ export function abortAllRequest() {
     });
     xhrPool.length = 0;
 }
+/**
+ * Object cookie pour manager les cookie du navigateur
+ */
 export const cookie = {
     /**
        * Créer un cookie
@@ -180,6 +183,9 @@ export const cookie = {
     }
 
 };
+/**
+ * Object search pour les recherche dans des éléments typique de HTML
+ */
 export const search = {
     /**
        * Recherche un terme dans une cologne d'un tableau
@@ -249,6 +255,9 @@ export const search = {
         return foundArray;
     }
 };
+/**
+ * Object sortt pour trier des éléments typique de HTML
+ */
 export const sort = {
     /**
        * Fonction de trié des tableau dans l'order croissant et décroissant
