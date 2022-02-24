@@ -5,7 +5,8 @@
     "type": "module",
     "main": "index.js",
     "scripts": {
-        "test": "npm-run-all minify eslint nodeTest",
+        "test": "npm-run-all build nodeTest",
+        "build": "npm-run-all minify eslint",
         "minify": "minify index.js > index.min.js",
         "eslint": "eslint index.js --fix && eslint index.min.js --fix",
         "nodeTest": "node index.js & node index.min.js"
