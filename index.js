@@ -73,9 +73,9 @@ export function callAPI(method, url, data = null, token = null, callbackSuccess 
  * @param {string} selector Nom de l'environnement ou afficher l'alert.
  * @param {string} type "warning" ou "danger".
  * @param {string} message Message afficher dans l'alert.
- * @param {boolean} autoclear Effacer les alerts déjà existantes.
+ * @param {boolean} autoClear Effacer les alerts déjà existantes.
  */
-export function displayAlert(selector, type, message, autoclear = true) {
+export function displayAlert(selector, type, message, autoClear = true) {
     const typeAlert = {
         info: {
             className: 'alert-info',
@@ -98,7 +98,7 @@ export function displayAlert(selector, type, message, autoclear = true) {
         throw new Error('Element absence de la page');
     } else {
         document.querySelectorAll(selector + ' div.alert').forEach(element => {
-            if (autoclear) {
+            if (autoClear) {
                 element.remove();
             }
         });
@@ -110,7 +110,7 @@ export function displayAlert(selector, type, message, autoclear = true) {
 }
 /**
  *
- * @param {string} selector Selecteur du bouton
+ * @param {string} selector Sélecteur du bouton
  * @param {string} text Texte à afficher
  * @param {boolean} tiny Afficher le text ou non
  * @param {string} type type de loading (grow ou border)
@@ -145,9 +145,9 @@ export const cookie = {
        * @param {int} expirationDays Nombre de jours de vie du cookie
        */
     set: function (name, value, expirationDays) {
-        const date = new Date();
+        let date = new Date();
         date.setTime(date.getTime() + (expirationDays * 24 * 60 * 60 * 1000));
-        const expires = 'expires=' + date.toUTCString();
+        let expires = 'expires=' + date.toUTCString();
         document.cookie = name + '=' + value + ';' + expires + ';path=/';
         console.log('cookie set');
     },
@@ -157,19 +157,19 @@ export const cookie = {
        * @param {string} input Nom du cookie à chercher
        * @returns {string} Valeur du cookie si trouvé
        */
-    get: function (input) {
-        const name = input + '=';
-        const ca = document.cookie.split(';');
-        for (let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) === ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) === 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return '';
+    get: function (input = null) {
+        let cookieList = document.cookie.split(';');
+        cookieList.forEach((cookie, index) => {
+            let arrayCookie = cookie.trim().split('=');
+            cookie = { 'name': arrayCookie[0], 'value': arrayCookie[1] };
+
+            cookieList[index] = cookie;
+        });
+        if (input === null) return cookieList;
+        cookieList.forEach(cookie=>{
+            if (cookie.name === input) return cookie;
+        });
+        return null;
     },
 
     /**
@@ -256,7 +256,7 @@ export const search = {
     }
 };
 /**
- * Object sortt pour trier des éléments typique de HTML
+ * Object sort pour trier des éléments typique de HTML
  */
 export const sort = {
     /**
