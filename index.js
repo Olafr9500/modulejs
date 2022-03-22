@@ -153,21 +153,19 @@ export const cookie = {
     /**
        * Cherche un cookie existant en fonction de son nom
        * @param {string} input Nom du cookie à chercher
-       * @returns {string} Valeur du cookie si trouvé
+       * @returns {string | boolean} Valeur du cookie si trouvé
        */
     get: function (input = null) {
-        let cookieList = document.cookie.split(';');
-        cookieList.forEach((cookie, index) => {
-            let arrayCookie = cookie.trim().split('=');
-            cookie = { 'name': arrayCookie[0], 'value': arrayCookie[1] };
-
-            cookieList[index] = cookie;
+        let returnValue = false,
+            cookieList = document.cookie.split(';');
+        if (input === null) return false;
+        cookieList.forEach(cookie => {
+            cookie = { 'name': cookie.trim().split('=')[0], 'value': cookie.trim().split('=')[1] };
+            if (cookie.name === input) {
+                returnValue = cookie.value;
+            }
         });
-        if (input === null) return cookieList;
-        cookieList.forEach(cookie=>{
-            if (cookie.name === input) return cookie;
-        });
-        return null;
+        return returnValue;
     },
 
     /**
@@ -175,8 +173,9 @@ export const cookie = {
        * @param {string} name Nom du cookie à supprimer
        */
     delete: function (name) {
-        if (this.get(name)) {
+        if (this.get(name) !== false) {
             document.cookie = name + '=' + ';path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT';
+            console.log('cookie delete');
         }
     }
 
