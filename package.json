@@ -1,15 +1,17 @@
 {
-    "name": "olafr-modulejs",
+    "name": "@olafr/modulejs",
     "version": "1.0.0",
     "description": "Boite à outils JS",
     "type": "module",
     "main": "index.js",
     "scripts": {
-        "test": "npm-run-all build nodeTest",
-        "build": "npm-run-all minify eslint",
-        "minify": "minify index.js > index.min.js",
-        "eslint": "eslint index.js --fix && eslint index.min.js --fix",
-        "nodeTest": "node index.js & node index.min.js"
+      "test": "npm run build",
+      "build": "minify index.js > index.min.js && eslint --fix index.js index.min.js",
+      "minify": "minify index.js > index.min.js",
+      "eslint": "eslint --fix index.js index.min.js",
+      "production": "npm install && npm run build && npm run del && npm install --production",
+      "development": "npm install",
+      "del": "node -e \"require('fs').rm('node_modules', { recursive: true }, () => { console.log('node_modules is deleted!'); });\""
     },
     "repository": {
         "type": "git",
