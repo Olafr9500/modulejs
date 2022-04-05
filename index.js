@@ -20,25 +20,49 @@ export function callAPI(method, url, data = null, token = null, callbackSuccess 
         xhr.onreadystatechange = function () {
             if (this.readyState === 4) {
                 if (this.status === 200) {
-                    const response = JSON.parse(this.responseText);
-                    if (response.error === 'no') {
-                        if (callbackSuccess) {
-                            callbackSuccess(response);
+                    if (this.responseText !== '') {
+                        if (this.responseText.indexOf('{') !== -1) {
+                            const response = JSON.parse(this.responseText);
+                            if (response.error) {
+                                if (response.error === 'no') {
+                                    if (callbackSuccess) {
+                                        callbackSuccess(response);
+                                    } else {
+                                        displayAlert('main', 'success', 'Appel Réussi');
+                                    }
+                                } else {
+                                    if (callbackFail) {
+                                        callbackFail(response);
+                                    } else {
+                                        displayAlert('main', 'warning', response.error);
+                                    }
+                                }
+                            } else {
+                                if (callbackSuccess) {
+                                    callbackSuccess(response);
+                                } else {
+                                    displayAlert('main', 'warning', 'Appel Réussi mais mauvais format');
+                                }
+                            }
                         } else {
-                            displayAlert('main', 'success', 'Appel Réussi');
+                            if (callbackError) {
+                                callbackError({ error: 'Réponse au mauvais format' });
+                            } else {
+                                displayAlert('main', 'danger', 'Réponse au mauvais format');
+                            }
                         }
                     } else {
-                        if (callbackFail) {
-                            callbackFail(response);
+                        if (callbackError) {
+                            callbackError({ error: 'Aucune réponse de la part du serveur malgré un code 200' });
                         } else {
-                            displayAlert('main', 'warning', response.error);
+                            displayAlert('main', 'danger', 'Aucune réponse de la part du serveur malgré un code 200');
                         }
                     }
                 } else {
                     if (callbackError) {
                         callbackError();
                     } else {
-                        displayAlert('main', 'danger', 'Erreur lors de l\'appel de l\'API');
+                        displayAlert('main', 'danger', DEFAULT_RESPONSE);
                     }
                 }
                 if (callbackAlways) {
@@ -132,6 +156,8 @@ export function abortAllRequest() {
     });
     xhrPool.length = 0;
 }
+
+
 /**
  * Object cookie pour manager les cookie du navigateur
  */
