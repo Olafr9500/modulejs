@@ -1,6 +1,6 @@
 {
     "name": "@olafr/modulejs",
-    "version": "1.0.1",
+    "version": "1.0.0",
     "description": "Boite à outils JS",
     "type": "module",
     "main": "index.js",
@@ -18,7 +18,7 @@
         "url": "git+https://github.com/Olafr9500/modulejs.git"
     },
     "keywords": [
-        "JS"
+        "JS", "module", "boite", "outils"
     ],
     "author": "Olafr",
     "license": "MIT",
@@ -28,7 +28,6 @@
     "homepage": "https://github.com/Olafr9500/modulejs#readme",
     "devDependencies": {
         "eslint": "^8.9.0",
-        "minify": "^8.0.4",
-        "request": "^2.88.2"
+        "minify": "^8.0.4"
     }
 }
