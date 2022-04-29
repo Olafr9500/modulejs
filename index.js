@@ -1,6 +1,186 @@
-export const DEFAULT_RESPONSE = 'Erreur lors de l\'appel de l\'API';
-export const LIST_METHOD = ['GET', 'POST'];
-export const xhrPool = [];
+/**
+ * Réponse par défaut en cas d'échec de l'appel API
+ */
+const DEFAULT_RESPONSE = 'Erreur lors de l\'appel de l\'API';
+/**
+ * List des méthodes HTTP autorisées
+ */
+const LIST_METHOD = ['GET', 'POST'];
+/**
+ * List des requêtes en cours
+ */
+const xhrPool = [];
+/**
+ * Object cookie pour manager les cookie du navigateur
+ */
+const cookie = {
+    /**
+       * Créer un cookie
+       * @param {string} name Nom du cookie
+       * @param {string} value Valeur du cookie
+       * @param {int} expirationDays Nombre de jours de vie du cookie
+       */
+    set: function (name, value, expirationDays) {
+        let date = new Date();
+        date.setTime(date.getTime() + (expirationDays * 24 * 60 * 60 * 1000));
+        let expires = 'expires=' + date.toUTCString();
+        document.cookie = name + '=' + value + ';' + expires + ';path=/';
+        console.log('cookie set');
+    },
+
+    /**
+       * Cherche un cookie existant en fonction de son nom
+       * @param {string} input Nom du cookie à chercher
+       * @returns {string | boolean} Valeur du cookie si trouvé
+       */
+    get: function (input = null) {
+        let returnValue = false,
+            cookieList = document.cookie.split(';');
+        if (input === null) return false;
+        cookieList.forEach(cookie => {
+            cookie = { 'name': cookie.trim().split('=')[0], 'value': cookie.trim().split('=')[1] };
+            if (cookie.name === input) {
+                returnValue = cookie.value;
+            }
+        });
+        return returnValue;
+    },
+
+    /**
+       * Supprime un cookie existant en fonction de son nom
+       * @param {string} name Nom du cookie à supprimer
+       */
+    delete: function (name) {
+        if (this.get(name) !== false) {
+            document.cookie = name + '=' + ';path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT';
+            console.log('cookie delete');
+        }
+    }
+
+};
+/**
+ * Object search pour les recherche dans des éléments typique de HTML
+ */
+const search = {
+    /**
+       * Recherche un terme dans une cologne d'un tableau
+       * @param {string} idTable Nom du tableau dans lequel chercher
+       * @param {int} index Numéro de la cologne dans laquelle chercher
+       * @param {string} input Terme rechercher
+       * @param {string} typeSearch Type de recherche
+       */
+    table: function (idTable, index, input = '', typeSearch = 'LIKE') {
+        if (typeof idTable === 'string') {
+            const table = document.getElementById(idTable);
+            const rows = table.querySelector('tbody').rows;
+            for (const element of rows) {
+                switch (typeSearch) {
+                case 'LIKE':
+                    if (element.querySelectorAll('td')[index].innerHTML.includes(input)) {
+                        if (!element.classList.contains('mustBeMask')) {
+                            element.classList.remove('d-none');
+                        }
+                    } else {
+                        element.classList.add('d-none');
+                    }
+                    break;
+                case 'EQUAL':
+                    if (element.querySelectorAll('td')[index].innerHTML === input) {
+                        if (!element.classList.contains('mustBeMask')) {
+                            element.classList.remove('d-none');
+                        }
+                    } else {
+                        element.classList.add('d-none');
+                    }
+                    break;
+                }
+            }
+        }
+    },
+
+    /**
+       * Recherche un terme dans une array
+       * @param {array} array Array dans lequel chercher
+       * @param {int} index Index de l'array dans lequel chercher
+       * @param {string} input Terme rechercher
+       * @param {string} typeSearch Type de recherche
+       * @returns {array}
+       */
+    array: function (array, index, input = '', typeSearch = 'LIKE') {
+        let foundArray = [];
+        if (typeof array === 'object' && array.length > 0) {
+            array.forEach(element => {
+                if (element[index]) {
+                    switch (typeSearch) {
+                    case 'LIKE':
+                        if (element[index].includes(input)) {
+                            foundArray.push(element);
+                        }
+                        break;
+                    case 'EQUAL':
+                        if (element[index] === input) {
+                            foundArray.push(element);
+                        }
+                    }
+                } else {
+                    foundArray = [];
+                }
+            });
+        }
+        return foundArray;
+    }
+};
+/**
+ * Object sort pour trier des éléments typique de HTML
+ */
+const sort = {
+    /**
+       * Fonction de trié des tableau dans l'order croissant et décroissant
+       * @param {int} column Numéro de la colonne à trié
+       * @param {string} table Id du tableau à trié
+       */
+    table: function (column, table) {
+        let rows; let switching; let i; let shouldSwitch; let dir; let switchCount = 0;
+        let current; let next;
+        table = document.getElementById(table);
+        switching = true;
+        dir = 'asc';
+        while (switching) {
+            switching = false;
+            rows = table.querySelector('tbody').rows;
+            if (rows.length) {
+                for (i = 0; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    current = rows[i].querySelectorAll('td')[column].innerHTML;
+                    next = rows[i + 1].querySelectorAll('td')[column].innerHTML;
+                    current = (isNaN(current) ? (current.includes('%') || current.includes('€') ? parseFloat(current.split(/( )|(&nbsp;)/)[0]) : current) : parseFloat(current));
+                    next = (isNaN(next) ? (next.includes('%') || next.includes('€') ? parseFloat(next.split(/( )|(&nbsp;)/)[0]) : next) : parseFloat(next));
+                    if (dir === 'asc') {
+                        if (current > next) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else {
+                        if (current < next) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchCount++;
+                } else {
+                    if (switchCount === 0 && dir === 'asc') {
+                        dir = 'desc';
+                        switching = true;
+                    }
+                }
+            }
+        }
+    }
+};
 /**
  * Appel l'API pour réaliser une action dans la base de données
  * @param {string} method HTTP request method : GET/POST
@@ -13,7 +193,7 @@ export const xhrPool = [];
  * @param {function} callbackAlways Fonction de retour en cas d'appel API
  * @param {boolean} sync true, l'appel API est asynchrone.
  */
-export function callAPI(method, url, data = null, token = null, callbackSuccess = null, callbackFail = null, callbackError = null, callbackAlways = null, sync = true) {
+function callAPI(method, url, data = null, token = null, callbackSuccess = null, callbackFail = null, callbackError = null, callbackAlways = null, sync = true) {
     if (LIST_METHOD.includes(method)) {
         const xhr = new XMLHttpRequest();
         xhrPool.push(xhr);
@@ -99,7 +279,7 @@ export function callAPI(method, url, data = null, token = null, callbackSuccess 
  * @param {string} message Message afficher dans l'alert.
  * @param {boolean} autoClear Effacer les alerts déjà existantes.
  */
-export function displayAlert(selector, type, message, autoClear = true) {
+function displayAlert(selector, type, message, autoClear = true) {
     const typeAlert = {
         info: {
             className: 'alert-info',
@@ -140,7 +320,7 @@ export function displayAlert(selector, type, message, autoClear = true) {
  * @param {string} type type de loading (grow ou border)
  * @param {string} size Taille des elements dans le bouton (sm ou lg ou null)
  */
-export function loadBtn(selector, text, tiny, type, size = null) {
+function loadBtn(selector, text, tiny, type, size = null) {
     if (selector === null) throw new Error('Erreur Selector');
     type = ['grow', 'border'].includes(type) ? type : 'border';
     size = size != null ? ['sm', 'lg'].includes(size) ? size : 'sm' : null;
@@ -150,182 +330,43 @@ export function loadBtn(selector, text, tiny, type, size = null) {
 /**
  * Annule l'ensemble des requêtes HTTP en cours
  */
-export function abortAllRequest() {
+function abortAllRequest() {
     xhrPool.forEach(element => {
         element.abort();
     });
     xhrPool.length = 0;
 }
-
-
 /**
- * Object cookie pour manager les cookie du navigateur
+ * Fonction retournant un HTMLElement via son id
+ * @param {string} selector Id de l'élément
+ * @returns {HTMLElement}
  */
-export const cookie = {
-    /**
-       * Créer un cookie
-       * @param {string} name Nom du cookie
-       * @param {string} value Valeur du cookie
-       * @param {int} expirationDays Nombre de jours de vie du cookie
-       */
-    set: function (name, value, expirationDays) {
-        let date = new Date();
-        date.setTime(date.getTime() + (expirationDays * 24 * 60 * 60 * 1000));
-        let expires = 'expires=' + date.toUTCString();
-        document.cookie = name + '=' + value + ';' + expires + ';path=/';
-        console.log('cookie set');
-    },
-
-    /**
-       * Cherche un cookie existant en fonction de son nom
-       * @param {string} input Nom du cookie à chercher
-       * @returns {string | boolean} Valeur du cookie si trouvé
-       */
-    get: function (input = null) {
-        let returnValue = false,
-            cookieList = document.cookie.split(';');
-        if (input === null) return false;
-        cookieList.forEach(cookie => {
-            cookie = { 'name': cookie.trim().split('=')[0], 'value': cookie.trim().split('=')[1] };
-            if (cookie.name === input) {
-                returnValue = cookie.value;
-            }
-        });
-        return returnValue;
-    },
-
-    /**
-       * Supprime un cookie existant en fonction de son nom
-       * @param {string} name Nom du cookie à supprimer
-       */
-    delete: function (name) {
-        if (this.get(name) !== false) {
-            document.cookie = name + '=' + ';path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT';
-            console.log('cookie delete');
-        }
-    }
-
-};
+function docId(selector) {
+    return document.getElementById(selector);
+}
 /**
- * Object search pour les recherche dans des éléments typique de HTML
+ * Fonction retournant un HTMLElement via une selection par querySelector
+ * @param {string} selector Sélection de l'élément
+ * @returns {HTMLElement}
  */
-export const search = {
-    /**
-       * Recherche un terme dans une cologne d'un tableau
-       * @param {string} idTable Nom du tableau dans lequel chercher
-       * @param {int} index Numéro de la cologne dans laquelle chercher
-       * @param {string} input Terme rechercher
-       * @param {string} typeSearch Type de recherche
-       */
-    table: function (idTable, index, input = '', typeSearch = 'LIKE') {
-        if (typeof idTable === 'string') {
-            const table = document.getElementById(idTable);
-            const rows = table.querySelector('tbody').rows;
-            for (const element of rows) {
-                switch (typeSearch) {
-                case 'LIKE':
-                    if (element.querySelectorAll('td')[index].innerHTML.includes(input)) {
-                        if (!element.classList.contains('mustBeMask')) {
-                            element.classList.remove('d-none');
-                        }
-                    } else {
-                        element.classList.add('d-none');
-                    }
-                    break;
-                case 'EQUAL':
-                    if (element.querySelectorAll('td')[index].innerHTML === input) {
-                        if (!element.classList.contains('mustBeMask')) {
-                            element.classList.remove('d-none');
-                        }
-                    } else {
-                        element.classList.add('d-none');
-                    }
-                    break;
-                }
-            }
-        }
-    },
-
-    /**
-       * Recherche un terme dans une array
-       * @param {array} array Array dans lequel chercher
-       * @param {int} index Index de l'array dans lequel chercher
-       * @param {string} input Terme rechercher
-       * @param {string} typeSearch Type de recherche
-       * @returns {array}
-       */
-    array: function (array, index, input = '', typeSearch = 'LIKE') {
-        let foundArray = [];
-        if (typeof array === 'object' && array.length > 0) {
-            array.forEach(element => {
-                if (element[index]) {
-                    switch (typeSearch) {
-                    case 'LIKE':
-                        if (element[index].includes(input)) {
-                            foundArray.push(element);
-                        }
-                        break;
-                    case 'EQUAL':
-                        if (element[index] === input) {
-                            foundArray.push(element);
-                        }
-                    }
-                } else {
-                    foundArray = [];
-                }
-            });
-        }
-        return foundArray;
-    }
-};
+function docQ(selector) {
+    return document.querySelector(selector);
+}
 /**
- * Object sort pour trier des éléments typique de HTML
+ * Fonction retournant plusieurs HTMLElement via une selection par querySelector
+ * @param {string} selector Sélection de l'élément
+ * @returns {HTMLElement}
  */
-export const sort = {
-    /**
-       * Fonction de trié des tableau dans l'order croissant et décroissant
-       * @param {int} column Numéro de la colonne à trié
-       * @param {string} table Id du tableau à trié
-       */
-    table: function (column, table) {
-        let rows; let switching; let i; let shouldSwitch; let dir; let switchCount = 0;
-        let current; let next;
-        table = document.getElementById(table);
-        switching = true;
-        dir = 'asc';
-        while (switching) {
-            switching = false;
-            rows = table.querySelector('tbody').rows;
-            if (rows.length) {
-                for (i = 0; i < (rows.length - 1); i++) {
-                    shouldSwitch = false;
-                    current = rows[i].querySelectorAll('td')[column].innerHTML;
-                    next = rows[i + 1].querySelectorAll('td')[column].innerHTML;
-                    current = (isNaN(current) ? (current.includes('%') || current.includes('€') ? parseFloat(current.split(/( )|(&nbsp;)/)[0]) : current) : parseFloat(current));
-                    next = (isNaN(next) ? (next.includes('%') || next.includes('€') ? parseFloat(next.split(/( )|(&nbsp;)/)[0]) : next) : parseFloat(next));
-                    if (dir === 'asc') {
-                        if (current > next) {
-                            shouldSwitch = true;
-                            break;
-                        }
-                    } else {
-                        if (current < next) {
-                            shouldSwitch = true;
-                            break;
-                        }
-                    }
-                }
-                if (shouldSwitch) {
-                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                    switching = true;
-                    switchCount++;
-                } else {
-                    if (switchCount === 0 && dir === 'asc') {
-                        dir = 'desc';
-                        switching = true;
-                    }
-                }
-            }
-        }
-    }
-};
+function docQAll(selector) {
+    return document.querySelectorAll(selector);
+}
+/**
+ * Fonction créant un élément HTML
+ * @param {string} selector Element à créer
+ * @returns {HTMLElement}
+ */
+function docCrea(selector) {
+    return document.createElement(selector);
+}
+
+module.exports = { DEFAULT_RESPONSE, LIST_METHOD, xhrPool, callAPI, displayAlert, loadBtn, abortAllRequest, docId, docQ, docQAll, docCrea, cookie, search, sort };
