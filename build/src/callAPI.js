@@ -67,7 +67,7 @@ function callAPI(method, url, data = null, token = null, callbackSuccess = null,
                     }
                 } else {
                     if (callbackError) {
-                        callbackError();
+                        callbackError({error: DEFAULT_RESPONSE});
                     } else {
                         displayAlert('main', 'danger', DEFAULT_RESPONSE);
                     }
