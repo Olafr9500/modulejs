@@ -2,16 +2,14 @@
   "name": "@olafr/modulejs",
   "version": "1.1.0",
   "description": "Boite à outils JS",
-  "type": "module",
   "main": "index.js",
+  "module": "index.esm.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
-    "build": "minify index.js > index.min.js && eslint --fix index.js index.min.js",
-    "minify": "minify index.js > index.min.js",
-    "eslint": "eslint --fix index.js index.min.js",
-    "production": "npm install && npm run build && npm run del && npm install --production",
-    "development": "npm install",
-    "del": "node -e \"require('fs').rm('node_modules', { recursive: true }, () => { console.log('node_modules is deleted!'); });\""
+    "build": "rollup -c && node terser.js && eslint --fix .",
+    "compile": "rollup -c",
+    "minify": "node terser.js",
+    "lint": "eslint --fix ."
   },
   "repository": {
     "type": "git",
@@ -31,6 +29,7 @@
   "homepage": "https://github.com/Olafr9500/modulejs#readme",
   "devDependencies": {
     "eslint": "^8.9.0",
-    "minify": "^8.0.4"
+    "terser": "^4.3.0",
+    "rollup": "^1.24.0"
   }
 }
