@@ -12,6 +12,8 @@ function abortAllRequest() {
     xhrPool.length = 0;
 }
 
+/* eslint-disable no-console */
+
 /**
  * Fonction d'affichage des alerts
  * @param {string} selector Nom de l'environnement ou afficher l'alert.
@@ -38,18 +40,39 @@ function displayAlert(selector, type, message, autoClear = true) {
             icon: 'bi-x-octagon'
         }
     };
-    if (document.querySelector(selector) == null) {
-        throw new Error('Element absence de la page');
+    // if the script is called in browser
+    if (typeof document !== 'undefined') {
+        if (document.querySelector(selector) == null) {
+            throw new Error('Element absence de la page');
+        } else {
+            document.querySelectorAll(selector + ' div.alert').forEach(element => {
+                if (autoClear) {
+                    element.remove();
+                }
+            });
+            const alert = document.createElement('div');
+            alert.classList.add('alert', 'alert-dismissible', 'fade', 'show', typeAlert[type].className);
+            alert.innerHTML = '<i class="bi ' + typeAlert[type].icon + '"></i> ' + message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+            document.querySelector(selector).prepend(alert);
+        }
     } else {
-        document.querySelectorAll(selector + ' div.alert').forEach(element => {
-            if (autoClear) {
-                element.remove();
-            }
-        });
-        const alert = document.createElement('div');
-        alert.classList.add('alert', 'alert-dismissible', 'fade', 'show', typeAlert[type].className);
-        alert.innerHTML = '<i class="bi ' + typeAlert[type].icon + '"></i> ' + message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
-        document.querySelector(selector).prepend(alert);
+        switch (type) {
+        case 'info':
+            console.log('%c' + message, 'color: #0099ff; font-weight: bold;');
+            break;
+        case 'success':
+            console.log('%c' + message, 'color: #00cc00; font-weight: bold;');
+            break;
+        case 'warning':
+            console.warn(message);
+            break;
+        case 'danger':
+            console.error(message);
+            break;
+        default:
+            console.log(message);
+            break;
+        }
     }
 }
 
@@ -120,9 +143,9 @@ function callAPI(method, url, data = null, token = null, callbackSuccess = null,
                     }
                 } else {
                     if (callbackError) {
-                        callbackError();
+                        callbackError({error: 'Status HTTP ' + this.status});
                     } else {
-                        displayAlert('main', 'danger', DEFAULT_RESPONSE);
+                        displayAlert('main', 'danger', 'Status HTTP ' + this.status);
                     }
                 }
                 if (callbackAlways) {
