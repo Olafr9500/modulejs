@@ -9,7 +9,8 @@
     "build": "rollup -c && node terser.js && eslint --fix .",
     "compile": "rollup -c",
     "minify": "node terser.js",
-    "lint": "eslint --fix ."
+    "lint": "eslint --fix .",
+    "export": "node export.js"
   },
   "repository": {
     "type": "git",
