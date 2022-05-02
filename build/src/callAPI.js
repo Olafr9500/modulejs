@@ -67,9 +67,9 @@ function callAPI(method, url, data = null, token = null, callbackSuccess = null,
                     }
                 } else {
                     if (callbackError) {
-                        callbackError({error: DEFAULT_RESPONSE});
+                        callbackError({error: 'Status HTTP ' + this.status});
                     } else {
-                        displayAlert('main', 'danger', DEFAULT_RESPONSE);
+                        displayAlert('main', 'danger', 'Status HTTP ' + this.status);
                     }
                 }
                 if (callbackAlways) {
