@@ -18,8 +18,6 @@ function abortAllRequest() {
     xhrPool.length = 0;
 }
 
-/* eslint-disable no-console */
-
 /**
  * Fonction d'affichage des alerts
  * @param {string} selector Nom de l'environnement ou afficher l'alert.
