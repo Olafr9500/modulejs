@@ -13,7 +13,13 @@ npm i @olafr/modulejs
 Une fois installé, ajouter cette ligne à vos script avec les outils que vous voulez utiliser.
 
 ```js
-import { cookie } from "../index.js";
+import { cookie } from "@olafr/modulejs";
+```
+
+Si vous voulez l'utiliser sur un navigateur, vous pouvez exporter le script vers le dossier de votre choix
+
+```bash
+npm run export path/
 ```
 
 ## About
