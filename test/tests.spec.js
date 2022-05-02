@@ -16,7 +16,7 @@ describe('callAPI', function () {
         }, () => done());
     });
     it('call a page and response an error 200', function(done){
-        moduleJS.callAPI('GET', 'http://tumbler/StuartAPI4/getToken.php', null, null, () => {
+        moduleJS.callAPI('GET', 'https://www.jules-et-john.fr/todomy/api/getToken.php', null, null, () => {
             assert.fail('Callback Success should not be called');
         }, ({error}) => {
             assert.equal(typeof error, 'string');
@@ -39,7 +39,7 @@ describe('callAPI', function () {
     });
 
     it('call a page and response 200 with bad format', function(done) {
-        moduleJS.callAPI('GET', 'http://tumbler/modules/test/testBadFormat.php', null, null, response => {
+        moduleJS.callAPI('GET', 'https://www.jules-et-john.fr/todomy/api/test/testBadFormat.php', null, null, response => {
             assert.equal(typeof response, 'object');
         }, () => {
             assert.fail('Callback Fail should not be called');
