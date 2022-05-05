@@ -10,5 +10,8 @@
         }
     ],
     "require": {},
-    "minimum-stability": "stable"
+    "repositories": {
+        "type" : "vcs",
+        "url": "https://github.com/Olafr9500/modulejs"
+    }
 }
