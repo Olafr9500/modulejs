@@ -1,0 +1,12 @@
+{
+    "name": "olafr9500/modulejs",
+    "description": "Boite \u0000 outils JS",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Olafr9500",
+            "email": "olafr.af.munso@gmail.com"
+        }
+    ],
+    "require": {}
+}
