@@ -10,8 +10,10 @@
         }
     ],
     "require": {},
-    "repositories": {
-        "type" : "vcs",
-        "url": "https://github.com/Olafr9500/modulejs"
-    }
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Olafr9500/modulejs"
+        }
+    ]
 }
