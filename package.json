@@ -1,6 +1,6 @@
 {
   "name": "@olafr/modulejs",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Boite à outils JS",
   "main": "index.js",
   "module": "index.esm.js",
