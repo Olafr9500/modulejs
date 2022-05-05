@@ -5,7 +5,7 @@
   "main": "index.js",
   "module": "index.esm.js",
   "scripts": {
-    "test": "npm install && mocha",
+    "test": "mocha",
     "build": "rollup -c && node terser.js && eslint --fix .",
     "compile": "rollup -c",
     "minify": "node terser.js",
