@@ -2,7 +2,7 @@ const rollupConfig = [{
     input: 'build/index.js',
     output: [{
         name: 'moduleJS',
-        file: 'index.js',
+        file: 'moduleJS.js',
         format: 'iife'
     }, {
         name: 'moduleJS',
