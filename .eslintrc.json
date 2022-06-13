@@ -5,8 +5,7 @@
         "node": true
     },
     "extends": [
-        "eslint:recommended",
-        "plugin:mocha/recommended"
+        "eslint:recommended"
     ],
     "parserOptions": {
         "ecmaVersion": "latest",
@@ -38,8 +37,5 @@
     },
     "globals": {
         "moduleJS": true
-    },
-    "plugins": [
-        "mocha"
-    ]
+    }
 }
