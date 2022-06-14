@@ -14,7 +14,7 @@ class cookie {
         let date = new Date();
         date.setTime(date.getTime() + (expirationDays * 24 * 60 * 60 * 1000));
         let expires = 'expires=' + date.toUTCString();
-        document.cookie = name + '=' + value + ';' + expires + ';path=/';
+        document.cookie = name + '=' + value + ';' + expires + ';path=/;SameSite=Strict';
         return true;
     }
 
@@ -43,7 +43,7 @@ class cookie {
        */
     static delete(name) {
         if (this.get(name) !== false) {
-            document.cookie = name + '=' + ';path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT';
+            document.cookie = name + '=' + ';path=/;SameSite=Strict;expires=Thu, 01 Jan 1970 00:00:01 GMT';
             return true;
         }
     }
