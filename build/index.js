@@ -6,3 +6,4 @@ export { default as loadBtn } from './src/loadBtn';
 export { default as cookie } from './src/cookie';
 export { default as search } from './src/search';
 export { default as sort } from './src/sort';
+export { default as json } from './src/json';

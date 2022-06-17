@@ -404,6 +404,20 @@ class sort {
     }
 }
 
+class json {
+    static read(file, callback) {
+        let rawFile = new XMLHttpRequest();
+        rawFile.overrideMimeType('application/json');
+        rawFile.open('GET', file, true);
+        rawFile.onreadystatechange = () => {
+            if (rawFile.readyState === 4 && rawFile.status == '200') {
+                callback(rawFile.responseText);
+            }
+        };
+        rawFile.send(null);
+    }
+}
+
 exports.DEFAULT_RESPONSE = DEFAULT_RESPONSE;
 exports.LIST_METHOD = LIST_METHOD;
 exports.abortAllRequest = abortAllRequest;
@@ -414,6 +428,7 @@ exports.docCrea = docCrea;
 exports.docId = docId;
 exports.docQ = docQ;
 exports.docQAll = docQAll;
+exports.json = json;
 exports.loadBtn = loadBtn;
 exports.search = search;
 exports.sort = sort;

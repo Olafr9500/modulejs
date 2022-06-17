@@ -398,4 +398,18 @@ class sort {
     }
 }
 
-export { DEFAULT_RESPONSE, LIST_METHOD, abortAllRequest, callAPI, cookie, displayAlert, docCrea, docId, docQ, docQAll, loadBtn, search, sort, xhrPool };
+class json {
+    static read(file, callback) {
+        let rawFile = new XMLHttpRequest();
+        rawFile.overrideMimeType('application/json');
+        rawFile.open('GET', file, true);
+        rawFile.onreadystatechange = () => {
+            if (rawFile.readyState === 4 && rawFile.status == '200') {
+                callback(rawFile.responseText);
+            }
+        };
+        rawFile.send(null);
+    }
+}
+
+export { DEFAULT_RESPONSE, LIST_METHOD, abortAllRequest, callAPI, cookie, displayAlert, docCrea, docId, docQ, docQAll, json, loadBtn, search, sort, xhrPool };
